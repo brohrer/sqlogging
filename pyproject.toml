@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sqlogging"
+version = "0.0.0"
+authors = [
+  { name="Brandon Rohrer", email="brohrer@gmail.com" },
+]
+description = "SQLite3-based logging for Python"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Repository = "https://github.com/brohrer/sqlogging"

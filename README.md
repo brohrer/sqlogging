@@ -48,6 +48,11 @@ logger.delete()
   * `warning(data)`
   * `error(data)`
   * `critical(data)`
+    * Parameters
+      * d
+    * Return type: Logger
+    * Raises
+      * k 
 
   * `get_columns()`
 

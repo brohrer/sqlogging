@@ -18,7 +18,6 @@ pip install sqlogging
 ```python
 from sqlogging import logging
 
-
 logger = logging.create_logger(name="test_logger", columns=["iter", "score"])
 logger.info({"iter": 0, "score": .4})
 logger.info({"iter": 1, "score": .1})
@@ -79,8 +78,7 @@ Remove it from existence.
 * Parameters
   * `data`(`dict`) - Write (at the specified severity level) a row into the sqlite db.
   The dictionary contains keys with the name of the column to be written, and
-  values with the data element corresponding to that columns.
-
+  values with the data element corresponding to that column.
   Any columns not included
   in the dict keys will be populated with `NULL`. (These will be `None` when
   queried and converted to Python.)

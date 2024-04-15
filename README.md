@@ -37,7 +37,7 @@ logger.delete()
   * `columns`(`List` of `str`)
 * Return type: `Logger`
 * Raises:
-  * `ValueError`: If `level` is not one of {'debug', 'info', 'warning', 'error', o'critical'}
+  * `ValueError`: If `level` is not one of `{'debug', 'info', 'warning', 'error', 'critical'}`
 
 ### `open_logger()`
 `logging.open_logger(name="log", dir_name="logs")`

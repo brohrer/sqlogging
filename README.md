@@ -28,11 +28,11 @@ logger.delete()
 
 ## API
 
-* `logging.create_logger()`
+* `logging.`**`create_logger()`**
 
 * `logging.open_logger()`
 
-* class `logging.Logger`
+* *class* `logging.`**`Logger`**
 
   * `close()`
 

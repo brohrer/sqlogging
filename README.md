@@ -31,35 +31,44 @@ logger.delete()
 ### `create_logger()`
 `logging.create_logger(name="log", dir_name="logs", level="info", columns=["ts", "data"])`
 * Parameters
-  * d
+  * `name`(`str`)
+  * `dir_name`(`str`)
+  * `level`(`str`)
+  * `columns`(`List` of `str`)
 * Return type: Logger
 * Raises
   * k 
 
 ### `open_logger()`
 `logging.open_logger(name="log", dir_name="logs")`
+* Parameters
+  * `name`(`str`)
+  * `dir_name`(`str`)
+* Return type: Logger
 
 ### `Logger`
 *class* `logging.Logger(name, dir_name, level=None, columns=None, create=True)`
+* Parameters
+  * `name`(`str`)
+  * `dir_name`(`str`)
+  * `level`(`str`)
+  * `columns`(`List` of `str`)
+  * `create`(`bool`)
 
-#### `close()'
+#### `close()`
 
 #### `delete()`
 
-#### `debug(data)` \\ `info(data)` \\ `warning(data)`
-#### `info(data)`
-#### `warning(data)`
-#### `error(data)`
-#### `critical(data)`
+#### `debug(data)` \\ `info(data)` \\ `warning(data)` \\ `error(data)` \\ `critical(data)`
 
 * Parameters
   * `data` (`dict`)
 
 #### `get_columns()`
+* Return type: `list` of `str`
 
 #### `query(query_str)`
 
 * Parameters:
   * `query_str` (`str`)
 * Return type: `list` of `tuple`
-  

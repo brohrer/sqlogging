@@ -46,19 +46,20 @@ logger.delete()
 
 #### `delete()`
 
-#### `debug(data)`
+#### `debug(data)` \\ `info(data)` \\ `warning(data)`
 #### `info(data)`
 #### `warning(data)`
 #### `error(data)`
 #### `critical(data)`
 
 * Parameters
-  * data (dict)
-* Return type: Logger
-* Raises
-  * k 
+  * `data` (`dict`)
 
 #### `get_columns()`
 
 #### `query(query_str)`
 
+* Parameters:
+  * `query_str` (`str`)
+* Return type: `list` of `tuple`
+  

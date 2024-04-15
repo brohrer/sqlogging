@@ -28,33 +28,34 @@ logger.delete()
 
 ## API
 
-* `logging.create_logger(name="log", dir_name="logs", level="info", columns=["ts", "data"])`
-  * Parameters
-    * d
-  * Return type: Logger
-  * Raises
-    * k 
+`logging.create_logger(name="log", dir_name="logs", level="info", columns=["ts", "data"])`
+* Parameters
+  * d
+* Return type: Logger
+* Raises
+  * k 
 
-* `logging.open_logger((name="log", dir_name="logs")`
+`logging.open_logger(name="log", dir_name="logs")`
 
-* class `logging.Logger(name, dir_name, level=None, columns=None, create=True)`
+class `logging.Logger(name, dir_name, level=None, columns=None, create=True)`
 
-  * `close()`
+`close()`
 
-  * `delete()`
+`delete()`
 
-  * `debug(data)`
-  * `info(data)`
-  * `warning(data)`
-  * `error(data)`
-  * `critical(data)`
-    * Parameters
-      * d
-    * Return type: Logger
-    * Raises
-      * k 
+`debug(data)`\br
+`info(data)`\br
+`warning(data)`\br
+`error(data)`\br
+`critical(data)`
 
-  * `get_columns()`
+* Parameters
+  * data (dict)
+* Return type: Logger
+* Raises
+  * k 
 
-  * `query(query_str)`
+`get_columns()`
+
+`query(query_str)`
 

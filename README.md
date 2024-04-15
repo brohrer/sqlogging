@@ -32,19 +32,19 @@ logger.delete()
 
 * `logging.open_logger()`
 
-### class `logging.Logger`
+* class `logging.Logger`
 
   * `close()`
 
   * `delete()`
 
-#### `debug()`
-#### `info()`
-#### `warning()`
-#### `error()`
-#### `critical()`
+  * `debug()`
+  * `info()`
+  * `warning()`
+  * `error()`
+  * `critical()`
 
-#### `get_columns()`
+  * `get_columns()`
 
-#### `query()`
+  * `query()`
 

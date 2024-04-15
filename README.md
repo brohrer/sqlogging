@@ -34,9 +34,9 @@ logger.delete()
 
 ### class `logging.Logger`
 
-    * `close()`
+  * `close()`
 
-    * `delete()`
+  * `delete()`
 
 #### `debug()`
 #### `info()`

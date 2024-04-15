@@ -35,16 +35,16 @@ logger.delete()
   * `dir_name`(`str`)
   * `level`(`str`)
   * `columns`(`List` of `str`)
-* Return type: Logger
-* Raises
-  * k 
+* Return type: `Logger`
+* Raises:
+  * `ValueError`: If `level` is not one of {'debug', 'info', 'warning', 'error', o'critical'}
 
 ### `open_logger()`
 `logging.open_logger(name="log", dir_name="logs")`
 * Parameters
   * `name`(`str`)
   * `dir_name`(`str`)
-* Return type: Logger
+* Return type: `Logger`
 
 ### `Logger`
 *class* `logging.Logger(name, dir_name, level=None, columns=None, create=True)`

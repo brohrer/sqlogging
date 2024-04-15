@@ -7,6 +7,7 @@ WARNING = 30
 ERROR = 40
 CRITICAL = 50
 
+
 def create_logger(
     name="log",
     dir_name="logs",
@@ -28,28 +29,22 @@ def create_logger(
         raise ValueError(
             "level must be one of 'debug', 'info', 'warning', 'error', or 'critical'")
 
-    logger = Logger(name, dir_name, level=level, columns=columns, create=True)
-    return logger
+    return Logger(name, dir_name, level=level, columns=columns, create=True)
 
 
-def open_logger(
-    name="log",
-    dir_name="logs",
-):
-    logger = Logger(name, dir_name, create=False)
-    return logger
+def open_logger(name="log", dir_name="."):
+    return Logger(name, dir_name, create=False)
 
 
 class Logger:
     def __init__(self, name, dir_name, level=None, columns=None, create=True):
         self.name = name
         self.dir_name = dir_name
-        self.db_path = os.path.join(self.dir_name, self.name)
-
         if create:
             os.makedirs(self.dir_name, exist_ok=True)
             self.level = level
 
+        self.db_path = os.path.join(self.dir_name, self.name + ".db")
         self.connection = sqlite3.connect(self.db_path)
         self.cursor = self.connection.cursor()
 
@@ -70,6 +65,9 @@ class Logger:
     def get_columns(self):
         return self.columns
 
+    def close(self):
+        self.connection.close()
+
     def delete(self):
         """
         Delete both the table and the database that contained it.
@@ -78,9 +76,6 @@ class Logger:
         self.cursor.execute(delete_table_sql)
         self.connection.close()
         os.remove(self.db_path)
-
-    def close(self):
-        self.connection.close()
 
     def debug(self, data):
         if self.level <= DEBUG:
@@ -103,6 +98,9 @@ class Logger:
             self._write(data)
 
     def _write(self, data):
+        """
+
+        """
         data_list = [None] * len(self.columns)
 
         for key, val in data.items():

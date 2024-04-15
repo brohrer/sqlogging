@@ -4,31 +4,28 @@ import sqlite3
 import time
 from sqlogging import logging
 
+TMP_LOGGER_DIR = f"test_logger_{int(time.time())}_dir"
+
 
 def teardown_logger(logger):
     logger.delete()
-    shutil.rmtree(logger.dir_name)
     del logger
 
 
-def test_logger_creation():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger = logging.create_logger(name=logger_name)
-    assert logger.name == logger_name
-
-    teardown_logger(logger)
+def teardown():
+    shutil.rmtree(TMP_LOGGER_DIR)
 
 
 def test_logging_dir_creation():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
+    logger_name = "logging_dir_creation"
     logger = logging.create_logger(
         name=logger_name,
-        dir_name=logger_dir_name,
+        dir_name=TMP_LOGGER_DIR,
     )
-    assert logger.dir_name == logger_dir_name
-    assert logger.db_path == os.path.join(logger_dir_name, logger_name)
-    assert os.path.isdir(logger_dir_name)
+    assert logger.name == logger_name
+    assert logger.dir_name == TMP_LOGGER_DIR
+    assert logger.db_path == os.path.join(TMP_LOGGER_DIR, logger_name + ".db")
+    assert os.path.isdir(TMP_LOGGER_DIR)
 
     teardown_logger(logger)
 
@@ -42,48 +39,38 @@ def test_levels():
 
 
 def test_level_setting():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     logger = logging.create_logger(
-        name=logger_name,
+        name="level_setting",
         level="debug",
-        dir_name=logger_dir_name,
+        dir_name=TMP_LOGGER_DIR,
     )
-
-    assert logger.level == 10
+    assert logger.level == logging.DEBUG
 
     teardown_logger(logger)
 
 
 def test_level_validation():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     try:
         logger = logging.create_logger(
-            name=logger_name,
+            name="level_validation",
             level="circuital",
-            dir_name=logger_dir_name,
+            dir_name=TMP_LOGGER_DIR,
         )
         assert False
         teardown_logger(logger)
     except ValueError:
         assert True
 
-
 def test_default_columns():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     logger = logging.create_logger(
-        name=logger_name,
+        name="default_columns",
         level="debug",
-        dir_name=logger_dir_name,
+        dir_name=TMP_LOGGER_DIR,
     )
-
-    table_info = logger.query(f"PRAGMA table_info({logger_name});")
+    table_info = logger.query(f"PRAGMA table_info({logger.name});")
     columns = []
     for row in table_info:
         columns.append(row[1])
-
     assert len(columns) == 2
     assert "ts" in columns
     assert "data" in columns
@@ -92,21 +79,17 @@ def test_default_columns():
 
 
 def test_column_assignment():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     columns_init = ["time", "iteration", "d3_score", "ABC", "B02349"]
     logger = logging.create_logger(
-        name=logger_name,
+        name="columns_assignment",
         level="debug",
-        dir_name=logger_dir_name,
+        dir_name=TMP_LOGGER_DIR,
         columns=columns_init,
     )
-
-    table_info = logger.query(f"PRAGMA table_info({logger_name});")
+    table_info = logger.query(f"PRAGMA table_info({logger.name});")
     columns = []
     for row in table_info:
         columns.append(row[1])
-
     assert len(columns) == 5
     for col in columns_init:
         assert col in columns
@@ -115,57 +98,50 @@ def test_column_assignment():
 
 
 def test_log_delete():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     logger = logging.create_logger(
-        name=logger_name,
-        dir_name=logger_dir_name,
+        name="log_delete",
+        dir_name=TMP_LOGGER_DIR,
     )
-    table_info = logger.query(f"PRAGMA table_info({logger_name});")
+    table_info = logger.query(f"PRAGMA table_info({logger.name});")
     assert len(table_info) == 2
 
     logger.delete()
     try:
-        table_info = logger.query(f"PRAGMA table_info({logger_name});")
+        table_info = logger.query(f"PRAGMA table_info({logger.name});")
         assert False
     except sqlite3.ProgrammingError:
         assert True
 
-    shutil.rmtree(logger.dir_name)
     del logger
 
 
 def test_log_close():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     logger = logging.create_logger(
-        name=logger_name,
-        dir_name=logger_dir_name,
+        name="log_close",
+        dir_name=TMP_LOGGER_DIR,
     )
-    table_info = logger.query(f"PRAGMA table_info({logger_name});")
+    table_info = logger.query(f"PRAGMA table_info({logger.name});")
     assert len(table_info) == 2
 
     logger.close()
     try:
-        table_info = logger.query(f"PRAGMA table_info({logger_name});")
+        table_info = logger.query(f"PRAGMA table_info({logger.name});")
         assert False
     except sqlite3.ProgrammingError:
         assert True
 
-    shutil.rmtree(logger.dir_name)
     del logger
 
 
 def test_log_reopen():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
+    logger_name = "log_reopen"
     columns_init = ["time", "iteration", "d3_score", "ABC", "B02349"]
     logger = logging.create_logger(
         name=logger_name,
-        dir_name=logger_dir_name,
+        dir_name=TMP_LOGGER_DIR,
         columns=columns_init,
     )
-    table_info = logger.query(f"PRAGMA table_info({logger_name});")
+    table_info = logger.query(f"PRAGMA table_info({logger.name});")
     assert len(table_info) == 5
 
     logger.close()
@@ -173,7 +149,7 @@ def test_log_reopen():
     try:
         logger = logging.create_logger(
             name=logger_name,
-            dir_name=logger_dir_name,
+            dir_name=TMP_LOGGER_DIR,
         )
         assert False
     except sqlite3.OperationalError:
@@ -181,23 +157,21 @@ def test_log_reopen():
 
     logger = logging.open_logger(
         name=logger_name,
-        dir_name=logger_dir_name,
+        dir_name=TMP_LOGGER_DIR,
     )
-    table_info = logger.query(f"PRAGMA table_info({logger_name});")
+    table_info = logger.query(f"PRAGMA table_info({logger.name});")
     assert len(table_info) == 5
 
     teardown_logger(logger)
 
 
 def test_writing_debug():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     logger = logging.create_logger(
-        name=logger_name,
-        dir_name=logger_dir_name,
+        name="writing_debug",
+        dir_name=TMP_LOGGER_DIR,
     )
     logger.info({"ts": 23874.2234, "data": "flurpy"})
-    result = logger.query(f"SELECT * FROM {logger_name};")
+    result = logger.query(f"SELECT * FROM {logger.name};")
     assert len(result) == 1
     assert result[0][0] == 23874.2234
     assert result[0][1] == "flurpy"
@@ -210,26 +184,22 @@ def test_writing_debug():
 
 
 def test_writing_below_severity():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     logger = logging.create_logger(
-        name=logger_name,
-        dir_name=logger_dir_name,
+        name="writing_below_severity",
+        dir_name=TMP_LOGGER_DIR,
         level="warning",
     )
     logger.debug({"ts": 42, "data": "bing bang"})
-    result = logger.query(f"SELECT * FROM {logger_name};")
+    result = logger.query(f"SELECT * FROM {logger.name};")
     assert len(result) == 0
 
     teardown_logger(logger)
 
 
 def test_writing_above_severity():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     logger = logging.create_logger(
-        name=logger_name,
-        dir_name=logger_dir_name,
+        name="writing_above_severity",
+        dir_name=TMP_LOGGER_DIR,
         level="debug",
     )
     logger.critical({"ts": 100000000, "data": "mayhem!"})
@@ -241,12 +211,10 @@ def test_writing_above_severity():
 
 
 def test_writing_partial_rows():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     columns_init = ["timestamp", "iteration", "d3_score"]
     logger = logging.create_logger(
-        name=logger_name,
-        dir_name=logger_dir_name,
+        name="writing_partial_rows",
+        dir_name=TMP_LOGGER_DIR,
         level="warning",
         columns=columns_init,
     )
@@ -263,11 +231,9 @@ def test_writing_partial_rows():
 
 
 def test_writing_nonexistent_column():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     logger = logging.create_logger(
-        name=logger_name,
-        dir_name=logger_dir_name,
+        name="writing_nonexistent_columns",
+        dir_name=TMP_LOGGER_DIR,
     )
     try:
         logger.critical({"iteration": 398})
@@ -279,12 +245,10 @@ def test_writing_nonexistent_column():
 
 
 def test_retrieving_last():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     columns_init = ["iter", "score"]
     logger = logging.create_logger(
-        name=logger_name,
-        dir_name=logger_dir_name,
+        name="retrieving_last",
+        dir_name=TMP_LOGGER_DIR,
         columns=columns_init,
     )
     logger.info({"iter": 0, "score": .4})
@@ -305,12 +269,10 @@ LIMIT 1
 
 
 def test_aggregation():
-    logger_name = f"test_logger_{int(time.time())}"
-    logger_dir_name = f"test_logger_{int(time.time())}_dir"
     columns_init = ["iter", "score"]
     logger = logging.create_logger(
-        name=logger_name,
-        dir_name=logger_dir_name,
+        name="test_aggregation",
+        dir_name=TMP_LOGGER_DIR,
         columns=columns_init,
     )
     logger.info({"iter": 0, "score": .4})

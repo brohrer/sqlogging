@@ -12,8 +12,9 @@ pip install sqlogging
 from sqlogging import logging
 
 name = "test_logger"
+dir_name = "."
 columns = ["iter", "score"]
-logger = logging.create_logger(name=name, columns=columns)
+logger = logging.create_logger(name=name, dir_name=dir_name, columns=columns)
 
 logger.info({"iter": 0, "score": .4})
 logger.info({"iter": 1, "score": .1})
@@ -21,25 +22,29 @@ logger.info({"iter": 2, "score": .8})
 
 result = logger.query(f"SELECT SUM(score) FROM {name}")
 print("sum of scores:", result[0][0])
+
+logger.delete()
 ```
 
 ## API
 
-### `create_logger()`
+### `logging.create_logger()`
 
-### `open_logger()`
+### `logging.open_logger()`
 
-### `Logger.close()`
+### class `logging.Logger`
 
-### `Logger.delete()`
+#### `close()`
 
-### `Logger.debug()`
-### `Logger.info()`
-### `Logger.warning()`
-### `Logger.error()`
-### `Logger.critical()`
+#### `delete()`
 
-### `Logger.get_columns()`
+#### `debug()`
+#### `info()`
+#### `warning()`
+#### `error()`
+#### `critical()`
 
-### `Logger.query()`
+#### `get_columns()`
+
+#### `query()`
 

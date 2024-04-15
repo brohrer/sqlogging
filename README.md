@@ -40,31 +40,25 @@ logger.delete()
 `logging.open_logger(name="log", dir_name="logs")`
 
 ### `Logger`
-*class* `logging.`**`Logger`**(name, dir_name, level=None, columns=None, create=True)`
+*class* `logging.Logger(name, dir_name, level=None, columns=None, create=True)`
 
 #### `close()'
-`logging.Logger.close()`
 
 #### `delete()`
-`logging.Logger.delete()`
 
-`debug(data)`
+#### `debug(data)`
+#### `info(data)`
+#### `warning(data)`
+#### `error(data)`
+#### `critical(data)`
 
-`info(data)`
+* Parameters
+  * data (dict)
+* Return type: Logger
+* Raises
+  * k 
 
-`warning(data)`
+#### `get_columns()`
 
-`error(data)`
-
-`critical(data)`
-
-  * Parameters
-    * data (dict)
-  * Return type: Logger
-  * Raises
-    * k 
-
-`get_columns()`
-
-`query(query_str)`
+#### `query(query_str)`
 

@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "sqlogging"
-version = "0.0.1"
+name = "sqlite-logging"
+version = "0.0.3"
 authors = [
   { name="Brandon Rohrer", email="brohrer@gmail.com" },
 ]

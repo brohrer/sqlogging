@@ -165,6 +165,22 @@ def test_log_reopen():
     teardown_logger(logger)
 
 
+def test_open_nonexistent_log():
+    logger_name = "nonexistent_log"
+
+    allowed = True
+    try:
+        logger = logging.open_logger(
+            name=logger_name,
+            dir_name=TMP_LOGGER_DIR,
+        )
+        teardown_logger(logger)
+    except sqlite3.OperationalError:
+        allowed = False
+
+    assert allowed == False
+
+
 def test_writing_debug():
     logger = logging.create_logger(
         name="writing_debug",

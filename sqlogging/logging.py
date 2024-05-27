@@ -10,39 +10,44 @@ CRITICAL = 50
 
 def create_logger(
     name="log",
-    dir_name="logs",
+    dir_name=".",
     level="info",
     columns=["ts", "data"],
 ):
-    level_str = level.upper()
-    if level_str == "DEBUG":
-        level = DEBUG
-    elif level_str == "INFO":
-        level = INFO
-    elif level_str == "WARNING":
-        level = WARNING
-    elif level_str == "ERROR":
-        level = ERROR
-    elif level_str == "CRITICAL":
-        level = CRITICAL
-    else:
-        raise ValueError(
-            "level must be one of 'debug', 'info', 'warning', 'error', or 'critical'")
-
     return Logger(name, dir_name, level=level, columns=columns, create=True)
 
 
-def open_logger(name="log", dir_name="."):
-    return Logger(name, dir_name, create=False)
+def open_logger(
+    name="log",
+    dir_name=".",
+    level="info"
+):
+    return Logger(name, dir_name, level=level, create=False)
 
 
 class Logger:
-    def __init__(self, name, dir_name, level=None, columns=None, create=True):
+    def __init__(self, name, dir_name, level="info", columns=None, create=True):
         self.name = name
         self.dir_name = dir_name
+
+        level_str = level.upper()
+        if level_str == "DEBUG":
+            level = DEBUG
+        elif level_str == "INFO":
+            level = INFO
+        elif level_str == "WARNING":
+            level = WARNING
+        elif level_str == "ERROR":
+            level = ERROR
+        elif level_str == "CRITICAL":
+            level = CRITICAL
+        else:
+            raise ValueError(
+                "level must be one of 'debug', 'info', 'warning', 'error', or 'critical'")
+        self.level = level
+
         if create:
             os.makedirs(self.dir_name, exist_ok=True)
-            self.level = level
 
         self.db_path = os.path.join(self.dir_name, self.name + ".db")
         self.connection = sqlite3.connect(self.db_path)
@@ -53,6 +58,19 @@ class Logger:
                 CREATE TABLE {self.name} ({', '.join(columns)});
                 """
             self.cursor.execute(create_table_sql)
+        else:
+            table_exists = self.query(f"""
+                SELECT EXISTS(
+                    SELECT 1
+                    FROM sqlite_master
+                    WHERE type='table'
+                    AND name='{self.name}');
+            """)
+            # if not table_exists:
+            #     raise RuntimeError(
+            #         f"Attempted to open logger that does not exist: {self.name}.\n" +
+            #         "Try instead: logging.create_logger({self.name}, ...)"
+            #     )
 
         table_info = self.query(f"PRAGMA table_info({self.name});")
         self.columns = []

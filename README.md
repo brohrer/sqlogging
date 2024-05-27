@@ -2,15 +2,21 @@
 
 A logger that is based on Python's
 [sqlite3](https://docs.python.org/3/library/sqlite3.html)
-library. Log entries are stored in a sqlite table and can be accessed
+library. Log entries are stored in a SQLite table and can be accessed
 with SQL queries.
 It is inspired by the [logging](https://docs.python.org/3/library/logging.html)
 library, but does not stay strictly faithful to the API. 
 
+The strength of sqlogging isn't speed. It typically takes a few milliseconds
+to write a log entry (about 7 ms on my machine).
+But if that's not a blocker for you, the accessibility and flexibility of analysis
+it gives is a sheer delight. Skip json parsing and unwieldy pandas syntax.
+If you speak SQL you can make your log data dance for you.
+
 ## Installation
 
 ```bash
-pip install sqlogging
+pip install sqlite-logging
 ```
 
 ## Usage
@@ -34,7 +40,7 @@ logger.delete()
 ### `create_logger()`
 `logging.create_logger(name="log", dir_name=".", level="info", columns=["ts", "data"])`
 
-For creating a new Logger from scratch. If you try to open a Logger by the same name
+For creating a new Logger from scratch. If you try to create a Logger by the same name
 as a pre-existing logger you'll get a `sqlite3.OperationalError`.
 
 * Parameters
@@ -52,15 +58,16 @@ as a pre-existing logger you'll get a `sqlite3.OperationalError`.
   * `ValueError`: If `level` is not one of the 5 allowed levels.
 
 ### `open_logger()`
-`logging.open_logger(name="log", dir_name="logs")`
+`logging.open_logger(name="log", dir_name=".", level="info")`
 
-For re-opening an existing Logger.
+For re-opening an existing Logger. If you try to open a Logger
+that doesn't already exist you'll get a `sqlite3.OperationalError`.
 
 * Parameters: as in `create_logger()`
 * Return type: `Logger`
 
 ### `Logger`
-*class* `logging.Logger(name, dir_name, level=None, columns=None, create=True)`
+*class* `logging.Logger(name, dir_name, level="info", columns=None, create=True)`
 * Parameters: as in `create_logger()`
   * `create`(`bool`) - Whether a new Logger should be created or an existing
   one re-opened.

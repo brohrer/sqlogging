@@ -175,7 +175,7 @@ def test_open_nonexistent_log():
             dir_name=TMP_LOGGER_DIR,
         )
         teardown_logger(logger)
-    except sqlite3.OperationalError:
+    except RuntimeError:
         allowed = False
 
     assert allowed == False

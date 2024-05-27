@@ -65,12 +65,11 @@ class Logger:
                     FROM sqlite_master
                     WHERE type='table'
                     AND name='{self.name}');
-            """)
-            # if not table_exists:
-            #     raise RuntimeError(
-            #         f"Attempted to open logger that does not exist: {self.name}.\n" +
-            #         "Try instead: logging.create_logger({self.name}, ...)"
-            #     )
+            """)[0][0]
+            if not table_exists:
+                raise RuntimeError(f"""
+Attempted to open logger that does not exist: {self.name}
+Try instead: logging.create_logger({self.name}, ...)""")
 
         table_info = self.query(f"PRAGMA table_info({self.name});")
         self.columns = []

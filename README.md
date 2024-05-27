@@ -61,7 +61,7 @@ as a pre-existing logger you'll get a `sqlite3.OperationalError`.
 `logging.open_logger(name="log", dir_name=".", level="info")`
 
 For re-opening an existing Logger. If you try to open a Logger
-that doesn't already exist you'll get a `sqlite3.OperationalError`.
+that doesn't already exist you'll get a `RuntimeError`.
 
 * Parameters: as in `create_logger()`
 * Return type: `Logger`
